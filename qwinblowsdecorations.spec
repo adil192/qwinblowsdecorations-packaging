@@ -1,19 +1,14 @@
-%global qt5 0
-%global qt6 1
-%global with_qt6 1
-
-%global commit      96a9476f8983acc2ad9c496e0a39a2fdce7d9095
+%global commit      3e1c26e79782e257fac8b61fa23598aa7a6411c7
 %global shortcommit %{sub %{commit} 1 7}
 
-Name:           qadwaitadecorations
-Epoch:          1
+Name:           qwinblowsdecorations
 Version:        0.1.7
-Release:        11.%{shortcommit}%{?dist}
-Summary:        Qt decoration plugin implementing Adwaita-like client-side decorations
+Release:        12.%{shortcommit}%{?dist}
+Summary:        Qt decoration plugin implementing Windows-like client-side decorations
 
 License:        LGPL-2.1-or-later
-URL:            https://github.com/adil192/QAdwaitaDecorations
-Source0:        https://github.com/FedoraQt/QAdwaitaDecorations/archive/%{commit}/QAdwaitaDecorations-%{commit}.tar.gz
+URL:            https://github.com/adil192/QWinblowsDecorations
+Source0:        https://github.com/adil192/QWinblowsDecorations/archive/%{commit}/QWinblowsDecorations-%{commit}.tar.gz
 
 
 BuildRequires:  cmake
@@ -24,26 +19,8 @@ BuildRequires:  wayland-devel
 %description
 %{summary}.
 
-%if %{with qt5}
-%package qt5
-Summary:        Qt decoration plugin implementing Adwaita-like client-side decorations
-BuildRequires:  qt5-qtbase-devel >= 5.15.2
-BuildRequires:  qt5-qtbase-static >= 5.15.2
-BuildRequires:  qt5-qtwayland-devel >= 5.15.2
-BuildRequires:  qt5-qtbase-private-devel >= 5.15.2
-BuildRequires:  qt5-qtsvg-devel >= 5.15.2
-%{?_qt5:Requires: %{_qt5}%{?_isa} = %{_qt5_version}}
-
-# When GNOME Shell and Qt 5 are installed, we want this by default
-Supplements:   (qt5-qtbase and gnome-shell)
-
-%description qt5
-%{summary}.
-%endif
-
-%if %{with qt6}
 %package qt6
-Summary:        Qt decoration plugin implementing Adwaita-like client-side decorations
+Summary:        Qt decoration plugin implementing Windows-like client-side decorations
 BuildRequires:  qt6-qtbase-devel >= 6.5.0
 BuildRequires:  qt6-qtbase-static >= 6.5.0
 BuildRequires:  qt6-qtwayland-devel >= 6.5.0
@@ -54,52 +31,34 @@ BuildRequires:  qt6-qtsvg-devel >= 6.5.0
 # When GNOME Shell and Qt 6 are installed, we want this by default
 Supplements:   (qt6-qtbase and gnome-shell)
 
+Provides:       qadwaitadecorations-qt6 = %{version}-%{release}
+Obsoletes:      qadwaitadecorations-qt6 < 0.1.8
+Obsoletes:      qadwaitadecorations-qt6 < 1:0.1.8
+
 %description qt6
 %{summary}.
-%endif
 
 %prep
-%autosetup -p1 -n  QAdwaitaDecorations-%{commit}
+%autosetup -p1 -n  QWinblowsDecorations-%{commit}
 
 %build
-%if %{with qt5}
-%global _vpath_builddir %{_target_platform}-qt5
-%cmake -DHAS_QT6_SUPPORT=true
-%cmake_build
-%endif
-
-%if %{with qt6}
 %global _vpath_builddir %{_target_platform}-qt6
 %cmake -DUSE_QT6=true
 %cmake_build
-%endif
 
 %install
-%if %{with qt5}
-%global _vpath_builddir %{_target_platform}-qt5
-%cmake_install
-%endif
-
-%if %{with qt6}
 %global _vpath_builddir %{_target_platform}-qt6
 %cmake_install
-%endif
 
-%if %{with qt5}
-%files qt5
-%doc README.md
-%license LICENSE
-%{_qt5_plugindir}/wayland-decoration-client/libqadwaitadecorations.so
-%endif
-
-%if %{with qt6}
 %files qt6
 %doc README.md
 %license LICENSE
-%{_qt6_plugindir}/wayland-decoration-client/libqadwaitadecorations.so
-%endif
+%{_qt6_plugindir}/wayland-decoration-client/libqwinblowsdecorations.so
 
 %changelog
+* Tue Oct 06 2026 Adil Hanney <adilhanney@disroot.org> - 0.1.7-12
+- Rebrand from QAdwaitaDecorations to QWinblowsDecorations
+
 * Wed Sep 09 2026 Adil Hanney <adilhanney@disroot.org> - 0.1.7-11
 - Rebuild (qt6)
 
@@ -119,7 +78,7 @@ Supplements:   (qt6-qtbase and gnome-shell)
 - Worked around qt6ct not updating instantly when changing light/dark mode. If the color scheme isn't available yet, it will try again in a few seconds.
 
 * Mon Aug 10 2026 Adil Hanney <adilhanney@disroot.org> - 0.1.7-5
-- Switched to my Windows-inspired fork of QAdwaitaDecorations
+- Switched to my Windows-inspired fork of QWinblowsDecorations
 
 * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.1.7-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
